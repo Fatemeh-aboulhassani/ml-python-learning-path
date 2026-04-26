@@ -114,10 +114,7 @@
 # Practice filtering, list comprehension, numeric operations, and reporting.
 
 # %%
-readings = [22.5, 23.1, -5.0, 24.0, 9999, 22.8, 21.9, -1.0, 23.7]
-invalid_values = [i for i in readings if i < 0 or i == 9999]
-valid_values = [i for i in readings if i >= 0 and i != 9999]
-print()
+
 
 # write your code here
 
