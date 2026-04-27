@@ -37,8 +37,14 @@ dataset_info = {
     "is_cleaned": False
 }
 
-# write your code here
+print(dataset_info["dataset_name"])
+print(dataset_info["rows"], dataset_info["columns"])
+print(dataset_info["is_cleaned"])
 
+dataset_info["source"] = "Kaggle"
+dataset_info["is_cleaned"] = True
+
+print(dataset_info)
 
 # %% [markdown]
 # ## Exercise 2 — ML Model Configuration
@@ -68,7 +74,15 @@ model_config = {
     "optimizer": "adam"
 }
 
-# write your code here
+print(model_config["model_name"])
+
+model_config["learning_rate"] = 0.001
+model_config["early_stopping"] = True
+model_config["random_state"] = 42
+
+print(model_config.keys())
+print(model_config.values())
+print(model_config)
 
 
 # %% [markdown]
@@ -95,8 +109,11 @@ metrics = {
     "f1_score": 0.88
 }
 
-# write your code here
+avg = sum(metrics.values()) / len(metrics)
+metrics["average_score"] = avg
 
+for k, v in metrics.items():
+    print(f"{k}: {v*100:.2f}%")
 
 # %% [markdown]
 # ## Exercise 4 — Safe API Response Reading
@@ -128,7 +145,13 @@ api_response = {
     }
 }
 
-# write your code here
+print(api_response.get("status"))
+print(api_response.get("message"))
+
+data = api_response.get("data", {})
+print(data.get("user_id"))
+print(data.get("email"))
+print(data.get("phone", "Not provided"))
 
 
 # %% [markdown]
@@ -157,7 +180,14 @@ record = {
     "purchased": "yes"
 }
 
-# write your code here
+record["age"] = record["age"] or 0
+record["income"] = record["income"] or 0
+record["purchased"] = 1 if record["purchased"] == "yes" else 0
+
+record["is_valid"] = record["age"] > 0 and record["income"] > 0
+
+print(record)
+
 
 
 # %% [markdown]
@@ -179,8 +209,14 @@ record = {
 # %%
 labels = ["cat", "dog", "cat", "car", "dog", "cat", "person", "car", "dog"]
 
-# write your code here
+count_dict = {}
 
+for label in labels:
+    count_dict[label] = count_dict.get(label, 0) + 1
+
+print(count_dict)
+print(count_dict.get("cat"))
+print(len(count_dict))
 
 # %% [markdown]
 # ## Exercise 7 — Hyperparameter Search Results
@@ -213,7 +249,16 @@ experiment_results = {
     "exp_06": 0.92
 }
 
-# write your code here
+best_exp = max(experiment_results, key=experiment_results.get)
+worst_exp = min(experiment_results, key=experiment_results.get)
+
+high_perf = {k: v for k, v in experiment_results.items() if v >= 0.90}
+
+print(best_exp, experiment_results[best_exp])
+print(worst_exp, experiment_results[worst_exp])
+print(high_perf)
+
+
 
 
 # %% [markdown]
@@ -256,7 +301,13 @@ training_run = {
     }
 }
 
-# write your code here
+train_acc = training_run["metrics"]["train_accuracy"]
+val_acc = training_run["metrics"]["validation_accuracy"]
+
+gap = train_acc - val_acc
+training_run["metrics"]["overfitting_gap"] = gap
+
+print(training_run)
 
 
 # %% [markdown]
@@ -291,7 +342,17 @@ input_record = {
     "credit_score": 690
 }
 
-# write your code here
+missing = [f for f in required_features if f not in input_record]
+
+report = {
+    "total_required_features": len(required_features),
+    "total_received_features": len(input_record),
+    "missing_features": missing,
+    "is_valid": len(missing) == 0
+}
+
+print(report)
+
 
 
 # %% [markdown]
@@ -364,4 +425,30 @@ experiments = {
     }
 }
 
-# write your code here
+best_exp = None
+best_score = 0
+fastest_exp = None
+fastest_time = float("inf")
+
+for name, data in experiments.items():
+    avg = (data["accuracy"] + data["precision"] + data["recall"]) / 3
+    data["average_score"] = avg
+
+    if avg > best_score:
+        best_score = avg
+        best_exp = name
+
+    if data["training_time"] < fastest_time:
+        fastest_time = data["training_time"]
+        fastest_exp = name
+
+summary = {
+    "best_experiment": best_exp,
+    "best_average_score": best_score,
+    "fastest_experiment": fastest_exp,
+    "fastest_training_time": fastest_time,
+    "total_experiments": len(experiments)
+}
+
+print(summary)
+# %%
